@@ -9,7 +9,7 @@ const songs = [
   { title:"Išli svrčky poza bučky", book:"Išli svrčky poza bučky", author:"Ľudmila Podjavorinská", cover:"IMG/NG-pribeh-cover-8.jpg", src: "AUDIO/06_ISLI SVRCKY POZY BUCKY.mp3"},
   { title:"Sedmohlások", book:"Sedmohlások", author:"Vladimír Ferko", cover:"IMG/NG-pribeh-cover-7.jpg", src: "AUDIO/07.1_SEDMOHLASOK_Sedmohlasok.mp3"},
   { title:"Vrabec všadebol", book:"Sedmohlások", author:"Vladimír Ferko", cover:"IMG/NG-pribeh-cover-7.jpg", src: "AUDIO/07.2_SEDMOHLASOK_Vrabec vsadebol.mp3"},
-  { title:"Karavanou cez saharu", book:"Karavanou cez saharu", author:"Herbert Kaufmann", cover:"IMG/NG-pribeh-cover-7.jpg", src: "AUDIO/08_S KARAVANOU CEZ SAHARU.mp3"},
+  { title:"Karavanou cez saharu", book:"Karavanou cez saharu", author:"Herbert Kaufmann", cover:"IMG/NG-pribeh-cover-1.jpg", src: "AUDIO/08_S KARAVANOU CEZ SAHARU.mp3"},
   { title:"Čertoryje", book:"Sedem dobrých bratov", author:"Ondrej Ľubomírsky", cover:"IMG/NG-pribeh-cover-10.jpg", src: "AUDIO/09.1_SEDEM DOBRYCH BRATOV_Certoryje.mp3"},
   { title:"Sedem dobrých bratov", book:"Sedem dobrých bratov", author:"Ondrej Ľubomírsky", cover:"IMG/NG-pribeh-cover-10.jpg", src: "AUDIO/09.2_SEDEM DOBRYCH BRATOV_Sedem dobrych bratov.mp3"},
   { title:"Či za dobré sa treba dobrým odmeniť", book:"Slovenské ľudové rozprávky", author:"Samo Czambla", cover:"IMG/NG-pribeh-cover-3.jpg", src: "AUDIO/10.1_SLOVENSKE LUDOVE ROZPRAVKY_Ci za dobre sa treba dobrym odmenit.mp3"},
