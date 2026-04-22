@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Príbeh</title>
+<link rel="stylesheet" href="https://use.typekit.net/kmj1apb.css">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="splatter"></div>
+
+<div class="wrapper">
+  <div class="reel-container">
+    <div class="reel-mask" id="reelMask">
+      <div class="reel-fade-top"></div>
+      <div class="reel-fade-bottom"></div>
+      <div class="reel-track" id="reelTrack"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="btn-nav" id="btnPrev">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2.5"/></svg>
+    </button>
+    <button class="btn-play" id="btnPlay">
+      <svg id="iconPlay" width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M7 4.5L20 12L7 19.5V4.5Z" fill="currentColor"/></svg>
+      <svg id="iconPause" width="32" height="32" viewBox="0 0 24 24" fill="none" style="display:none">
+        <rect x="5" y="4" width="5" height="16" fill="currentColor"/><rect x="14" y="4" width="5" height="16" fill="currentColor"/>
+      </svg>
+    </button>
+    <button class="btn-nav" id="btnNext">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2.5"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
