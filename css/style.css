@@ -83,7 +83,10 @@ body {
 .reel-track {
   display: flex;
   flex-direction: column;
+  /* GPU Akcelerácia */
   will-change: transform;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
 }
 
 .reel-fade-top, .reel-fade-bottom {
@@ -116,6 +119,9 @@ body {
   position: relative;
   margin-bottom: 24px;
   flex-shrink: 0;
+  /* Optimalizácia rotácie */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   transition: transform 0.8s cubic-bezier(0.45, 0, 0.55, 1);
 }
 
@@ -206,10 +212,19 @@ body {
   border-radius: 50%;
   background: var(--black);
   color: var(--white);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-play.is-playing {
+  background: var(--pink);
+  color: var(--black);
 }
 
 .btn-play.is-active {
-  background: var(--pink) !important;
-  color: var(--black) !important;
   transform: scale(0.92);
+  opacity: 0.8;
+}
+
+@media (hover: hover) {
+  .btn-play:hover { background: var(--pink); color: var(--black); }
 }

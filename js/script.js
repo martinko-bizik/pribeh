@@ -23,41 +23,59 @@ let current = 0, playing = false, animating = false;
 const track = document.getElementById('reelTrack');
 const audio = new Audio();
 
-function loadSong(index) {
-  audio.src = songs[index].src;
-  audio.load();
-}
-
-function togglePlay() {
-  if (playing) {
-    audio.pause();
-  } else {
-    audio.play().catch(e => console.log("Audio error:", e));
-  }
-  playing = !playing;
-  updatePlayIcons();
-}
-
-function updatePlayIcons() {
-  document.getElementById('iconPlay').style.display = playing ? 'none' : 'block';
-  document.getElementById('iconPause').style.display = playing ? 'block' : 'none';
-}
-
-audio.onended = () => navigate(1);
-
-// Farba je teraz zafixovaná k objektu song, aby sa nemenila pri cyklení
+/**
+ * Zafixuje farbu k názvu piesne, aby sa pri nekonečnom skrolovaní nemenila.
+ */
 function getColorClass(songTitle) {
-  const hash = songTitle.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  return 'c' + (hash % 7);
+  let hash = 0;
+  for (let i = 0; i < songTitle.length; i++) {
+    hash = songTitle.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return 'c' + (Math.abs(hash) % 7);
 }
 
 function getRandomRotation() {
   return (Math.random() * 6 - 3).toFixed(1);
 }
 
+function loadSong(index) {
+  audio.src = songs[index].src;
+  audio.load();
+}
+
+function updatePlayIcons() {
+  const btnPlay = document.getElementById('btnPlay');
+  const iconPlay = document.getElementById('iconPlay');
+  const iconPause = document.getElementById('iconPause');
+
+  if (playing) {
+    iconPlay.style.display = 'none';
+    iconPause.style.display = 'block';
+    btnPlay.classList.add('is-playing'); // CSS zmení farbu na pink
+  } else {
+    iconPlay.style.display = 'block';
+    iconPause.style.display = 'none';
+    btnPlay.classList.remove('is-playing'); // CSS vráti na čiernu
+  }
+}
+
+function togglePlay() {
+  if (playing) {
+    audio.pause();
+  } else {
+    audio.play().catch(e => console.log("Audio play blocked:", e));
+  }
+  playing = !playing;
+  updatePlayIcons();
+}
+
+audio.onended = () => navigate(1);
+
 function buildCards() {
-  const ext = [songs[songs.length-1], ...songs, songs[0]];
+  // Pridáme dummy karty na začiatok a koniec pre plynulý nekonečný loop
+  const ext = [songs[songs.length - 1], ...songs, songs[0]];
   track.innerHTML = '';
+  
   ext.forEach((s) => {
     const colorClass = getColorClass(s.title);
     const rotation = getRandomRotation();
@@ -76,10 +94,20 @@ function buildCards() {
   });
 }
 
+/**
+ * Nastavenie pozície s GPU akceleráciou (translateZ(0))
+ */
 function setPos(extIdx, instant) {
   const y = -extIdx * CARD_H;
-  track.style.transition = instant ? 'none' : 'transform 0.8s cubic-bezier(0.45, 0, 0.55, 1)';
-  track.style.transform = `translateY(${y}px)`;
+  if (instant) {
+    track.style.transition = 'none';
+  } else {
+    // cubic-bezier optimalizovaný pre plynulý dojazd na dotykových displejoch
+    track.style.transition = 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)';
+  }
+  
+  // translateZ(0) vynúti renderovanie cez grafický čip (plynulosť)
+  track.style.transform = `translateY(${y}px) translateZ(0)`;
 }
 
 function navigate(dir) {
@@ -89,52 +117,65 @@ function navigate(dir) {
   const tgtExt = (current + 1) + dir;
   const wrap = ((current + dir) % songs.length + songs.length) % songs.length;
 
-  setPos(tgtExt, false);
+  // Spustenie animácie
+  requestAnimationFrame(() => {
+    setPos(tgtExt, false);
+  });
   
-  track.addEventListener('transitionend', function h() {
-    track.removeEventListener('transitionend', h);
+  const onTransitionEnd = () => {
+    track.removeEventListener('transitionend', onTransitionEnd);
     current = wrap;
-    setPos(current + 1, true);
+    setPos(current + 1, true); // Okamžitý skok na reálnu pozíciu (neviditeľne)
     
     loadSong(current);
-    if (playing) audio.play();
+    if (playing) {
+      audio.play().catch(e => console.log("Auto-play error:", e));
+    }
     
     animating = false;
-  }, { once: true });
+  };
+
+  track.addEventListener('transitionend', onTransitionEnd);
 }
 
-// --- UNIVERZÁLNY HANDLER PRE DOTYK A MYŠ (iPad FIX) ---
+/**
+ * Špeciálny handler pre iPad: eliminuje ghosting a oneskorenie dotyku.
+ */
 function setupControl(id, action) {
   const btn = document.getElementById(id);
-
-  const start = (e) => {
-    // Zabránime emulovaným clickom a ghostingu
+  
+  const handleStart = (e) => {
+    // Zabraňuje simulovaným "click" udalostiam a systémovému zvýrazneniu
     if (e.cancelable) e.preventDefault(); 
     btn.classList.add('is-active');
   };
 
-  const end = (e) => {
+  const handleEnd = (e) => {
     if (btn.classList.contains('is-active')) {
       btn.classList.remove('is-active');
       action();
     }
   };
 
-  const cancel = () => btn.classList.remove('is-active');
+  const handleCancel = () => {
+    btn.classList.remove('is-active');
+  };
 
-  // Pointer udalosti pokrývajú myš aj dotyk jedným kódom
-  btn.addEventListener('pointerdown', start);
-  btn.addEventListener('pointerup', end);
-  btn.addEventListener('pointerleave', cancel);
-  btn.addEventListener('pointercancel', cancel);
+  // Pointer udalosti fungujú pre myš aj dotyk (iOS 13+)
+  btn.addEventListener('pointerdown', handleStart);
+  btn.addEventListener('pointerup', handleEnd);
+  btn.addEventListener('pointerleave', handleCancel);
+  btn.addEventListener('pointercancel', handleCancel);
 }
 
-// Priradenie akcií tlačidlám
-setupControl('btnPrev', () => navigate(-1));
-setupControl('btnNext', () => navigate(1));
-setupControl('btnPlay', () => togglePlay());
+// Inicializácia pri načítaní
+document.addEventListener('DOMContentLoaded', () => {
+  buildCards();
+  setPos(current + 1, true);
+  loadSong(current);
 
-// Inicializácia
-buildCards();
-setPos(current + 1, true);
-loadSong(current);
+  // Naviazanie ovládania
+  setupControl('btnPrev', () => navigate(-1));
+  setupControl('btnNext', () => navigate(1));
+  setupControl('btnPlay', () => togglePlay());
+});
