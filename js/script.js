@@ -20,7 +20,7 @@ const songs = [
 
 function getCardHeight() {
   const mask = document.querySelector('.reel-mask');
-  return mask ? mask.offsetHeight : 800;
+  return mask ? mask.offsetHeight : 700;
 }
 
 let current = 0, playing = false, animating = false;

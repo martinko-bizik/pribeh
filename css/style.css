@@ -12,8 +12,8 @@
   --white:   #f8f5ef;
 
   --card-w: min(800px, 92vw);
-  --card-h: calc(var(--card-w) * 1);
-  --cover-size: calc(var(--card-w) * 0.62);
+  --card-h: min(calc(var(--card-w) * 1), calc(100dvh - 156px));
+  --cover-size: min(calc(var(--card-w) * 0.55), calc(var(--card-h) * 0.58));
 
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -24,7 +24,7 @@
 
 body {
   background: var(--white);
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,6 +74,8 @@ body {
   align-items: center;
   gap: 24px;
   padding: 28px 16px;
+  max-height: 100dvh;
+  overflow: hidden;
 }
 
 .reel-container {
@@ -131,7 +133,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(14px, 4vw, 24px) clamp(12px, 3.5vw, 20px);
+  padding: clamp(14px, 3vw, 24px);
   background: var(--white);
 }
 
@@ -141,8 +143,8 @@ body {
   border: 6px solid var(--black);
   overflow: hidden;
   position: relative;
-  margin-bottom: clamp(14px, 4vw, 28px);
   flex-shrink: 0;
+  margin-bottom: clamp(12px, 2.5vh, 28px);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transition: transform var(--dur-cover) var(--ease-spring);
@@ -164,14 +166,17 @@ body {
 .c5 { background: var(--blue); }
 .c6 { background: var(--green); }
 
-.card-info { text-align: center; width: 100%; }
+.card-info {
+  text-align: center;
+  width: 100%;
+}
 
 .song-label {
   display: inline-block;
   padding: 6px 16px;
-  margin-bottom: 20px;
+  margin-bottom: clamp(6px, 1.5vh, 20px);
   font-family: "kuhlman-vf", sans-serif;
-  font-size: clamp(22px, 6vw, 34px);
+  font-size: clamp(20px, 5vw, 38px);
   line-height: 1.15;
   text-align: center;
   max-width: 100%;
@@ -179,7 +184,7 @@ body {
 }
 
 .card-book {
-  font-size: clamp(13px, 2.1vw, 20px);
+  font-size: clamp(11px, 1.8vw, 18px);
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -188,7 +193,7 @@ body {
 }
 
 .card-author {
-  font-size: clamp(13px, 2.1vw, 20px);
+  font-size: clamp(11px, 1.8vw, 18px);
   color: #555;
   font-style: italic;
 }
@@ -197,7 +202,7 @@ body {
   display: flex;
   align-items: center;
   gap: clamp(14px, 4vw, 20px);
-  margin-top: 10px;
+  flex-shrink: 0;
 }
 
 .btn-nav, .btn-play {
@@ -252,9 +257,31 @@ body {
   opacity: 0.8;
 }
 
-@media (max-width: 640px) {
+@media (max-height: 599px) {
+  :root {
+    --card-w: min(500px, 70vw);
+    --card-h: calc(100dvh - 80px);
+    --cover-size: min(calc(var(--card-w) * 0.55), calc(var(--card-h) * 0.52));
+  }
+  .wrapper {
+    gap: 12px;
+    padding: 10px 16px;
+  }
   .reel-fade-top,
   .reel-fade-bottom {
-    height: 48px;
+    height: 36px;
+  }
+  .song-label {
+    font-size: clamp(16px, 3.5vw, 26px);
+  }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --card-w: 96vw;
+  }
+  .reel-fade-top,
+  .reel-fade-bottom {
+    height: 40px;
   }
 }
