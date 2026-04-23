@@ -11,8 +11,8 @@
   --black:   #111;
   --white:   #f8f5ef;
 
-  --card-w: min(600px, 92vw);
-  --card-h: calc(var(--card-w) * 1.25);
+  --card-w: min(800px, 92vw);
+  --card-h: calc(var(--card-w) * 1);
   --cover-size: calc(var(--card-w) * 0.62);
 
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
